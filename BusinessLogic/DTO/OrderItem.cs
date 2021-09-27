@@ -1,4 +1,4 @@
-﻿namespace PromotionEngine
+﻿namespace BusinessLogic.DTO
 {
     public class OrderItem
     {

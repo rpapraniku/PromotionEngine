@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace PromotionEngine
+namespace BusinessLogic.DTO
 {
-    internal class Promotion
+    public class Promotion
     {
         public string BundleType { get; set; }
         public string SKU { get; set; }
