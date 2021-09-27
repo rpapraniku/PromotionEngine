@@ -1,29 +1,47 @@
-﻿using BusinessLogic.DTO;
+﻿using BusinessLogic.Calculators;
+using BusinessLogic.DTO;
 using BusinessLogic.Interface;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BusinessLogic.Service
 {
     public class CalculateService : ICalculateService
     {
-        public object CalcualteOrder(Order order, List<Promotion> promotions)
+        public CheckoutSummary CalcualteOrder(Order order, List<Promotion> promotions)
         {
+            CheckoutSummary checkoutSummary = new CheckoutSummary();
+
             foreach (var promotion in promotions)
             {
                 if (promotion.BundleType == BundleType.Multiple)
                 {
-                    //logic here
+                    var item = order.Items.FirstOrDefault(x => x.SKU == promotion.SKU);
+                    if (item == null)
+                    {
+                        // item not on the bucket list
+                        continue;
+                    }
+
+                    checkoutSummary = MultipleCalculator.Calculate(checkoutSummary, item, promotion);
                 }
                 else if (promotion.BundleType == BundleType.Combination)
                 {
-                    //logic here
+                    var bundleItems = order.Items.Where(x => promotion.SKUs.Contains(x.SKU)).ToList();
+                    if (bundleItems == null)
+                    {
+                        // item not on the bucket list
+                        continue;
+                    }
+
+                    checkoutSummary = BundleCalculator.Calculate(checkoutSummary, bundleItems, promotion);
                 }
                 else
                 {
 
                 }
             }
-            return new object();
+            return checkoutSummary;
         }
     }
 }

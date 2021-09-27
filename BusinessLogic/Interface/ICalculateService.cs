@@ -5,6 +5,6 @@ namespace BusinessLogic.Interface
 {
     public interface ICalculateService
     {
-        public object CalcualteOrder(Order order, List<Promotion> promotions);
+        public CheckoutSummary CalcualteOrder(Order order, List<Promotion> promotions);
     }
 }
