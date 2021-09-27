@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using BusinessLogic.DTO.Enums;
+using System.Collections.Generic;
 
 namespace BusinessLogic.DTO
 {

@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.Calculators;
 using BusinessLogic.DTO;
+using BusinessLogic.DTO.Enums;
 using BusinessLogic.Interface;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,11 +37,10 @@ namespace BusinessLogic.Service
 
                     checkoutSummary = BundleCalculator.Calculate(checkoutSummary, bundleItems, promotion);
                 }
-                else
-                {
-
-                }
             }
+
+            checkoutSummary = DefaultCalculator.Calculate(checkoutSummary, order.Items, promotions);
+
             return checkoutSummary;
         }
     }

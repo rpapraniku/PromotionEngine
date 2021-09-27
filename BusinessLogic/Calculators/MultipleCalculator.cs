@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.DTO;
+using BusinessLogic.DTO.Enums;
 
 namespace BusinessLogic.Calculators
 {

@@ -1,4 +1,4 @@
-﻿namespace BusinessLogic.DTO
+﻿namespace BusinessLogic.DTO.Enums
 {
     public enum BundleType
     {

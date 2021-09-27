@@ -1,4 +1,5 @@
 using BusinessLogic.DTO;
+using BusinessLogic.DTO.Enums;
 using BusinessLogic.Service;
 using System.Collections.Generic;
 using Xunit;
@@ -46,15 +47,15 @@ namespace PromotionEngineTests
                 {
                     new OrderItem { Quantity = 5, SKU = "A", Price = 50 }, // 130 + 50 + 50
                     new OrderItem { Quantity = 5, SKU = "B", Price = 30 }, // 48 + 48 + 30
-                    new OrderItem { Quantity = 1, SKU = "C", Price = 20 },
-                    new OrderItem { Quantity = 1, SKU = "D", Price = 15 } // 28
+                    new OrderItem { Quantity = 4, SKU = "C", Price = 20 }
+                    //new OrderItem { Quantity = 2, SKU = "D", Price = 15 } // 40 + 30 = 70 - 20% = 56
                 }
             };
 
             var promotions = new List<Promotion> {
                 new Promotion { BundleType = BundleType.Multiple, SKU = "A", Quantity = 3, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 130},
-                new Promotion { BundleType = BundleType.Multiple, SKU = "B", Quantity = 2 , DiscountType = DiscountType.Percentage, PercentageDiscount = 20},
-                new Promotion { BundleType = BundleType.Combination, SKUs = new List<string> { "C", "D" }, FixedPriceDiscount = 20, DiscountType = DiscountType.Percentage }
+                //new Promotion { BundleType = BundleType.Multiple, SKU = "B", Quantity = 2 , DiscountType = DiscountType.Percentage, PercentageDiscount = 20},
+                //new Promotion { BundleType = BundleType.Combination, SKUs = new List<string> { "C", "D" }, DiscountType = DiscountType.Percentage, PercentageDiscount = 20 }
             };
 
             //Act
