@@ -1,5 +1,5 @@
 using BusinessLogic.DTO;
-using System;
+using BusinessLogic.Service;
 using System.Collections.Generic;
 using Xunit;
 
@@ -22,14 +22,17 @@ namespace PromotionEngineTests
             };
 
             var promotions = new List<Promotion> {
-                new Promotion { BundleType = "Multiple", SKU = "A", MultipleBundleCount = 3, DiscountType = "FixedPrice", FixedPriceDiscount = 50},
-                new Promotion { BundleType = "Multiple", SKU = "B", MultipleBundleCount = 2 , DiscountType = "Percentage", PercentageDiscount = 10},
-                new Promotion { BundleType = "Combination", SKUs = new List<string> { "C", "D" } }
+                new Promotion { BundleType = BundleType.Multiple, SKU = "A", MultipleBundleCount = 3, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 50},
+                new Promotion { BundleType = BundleType.Multiple, SKU = "B", MultipleBundleCount = 2 , DiscountType = DiscountType.Percentage, PercentageDiscount = 10},
+                new Promotion { BundleType = BundleType.Combination, SKUs = new List<string> { "C", "D" } }
             };
 
             //Act
+            var calculateService = new CalculateService();
+            var orderResults = calculateService.CalcualteOrder(order);
 
-
+            //Assert
+            //Assert.Equal(100,  )
 
         }
 
@@ -48,13 +51,16 @@ namespace PromotionEngineTests
             };
 
             var promotions = new List<Promotion> {
-                new Promotion { BundleType = "Multiple", SKU = "A", MultipleBundleCount = 3, DiscountType = "FixedPrice", FixedPriceDiscount = 50},
-                new Promotion { BundleType = "Multiple", SKU = "B", MultipleBundleCount = 2 , DiscountType = "Percentage", PercentageDiscount = 10},
-                new Promotion { BundleType = "Combination", SKUs = new List<string> { "C", "D" } }
+                new Promotion { BundleType = BundleType.Multiple, SKU = "A", MultipleBundleCount = 3, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 50},
+                new Promotion { BundleType = BundleType.Multiple, SKU = "B", MultipleBundleCount = 2 , DiscountType = DiscountType.Percentage, PercentageDiscount = 10},
+                new Promotion { BundleType = BundleType.Combination, SKUs = new List<string> { "C", "D" } }
             };
 
             //Act
+            var calculateService = new CalculateService();
+            var orderResults = calculateService.CalcualteOrder(order);
 
+            //Assert
         }
 
         [Fact]
@@ -73,12 +79,16 @@ namespace PromotionEngineTests
             };
 
             var promotions = new List<Promotion> {
-                new Promotion { BundleType = "Multiple", SKU = "A", MultipleBundleCount = 3, DiscountType = "FixedPrice", FixedPriceDiscount = 50},
-                new Promotion { BundleType = "Multiple", SKU = "B", MultipleBundleCount = 2 , DiscountType = "Percentage", PercentageDiscount = 10},
-                new Promotion { BundleType = "Combination", SKUs = new List<string> { "C", "D" } }
+                new Promotion { BundleType = BundleType.Multiple, SKU = "A", MultipleBundleCount = 3, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 50},
+                new Promotion { BundleType = BundleType.Multiple, SKU = "B", MultipleBundleCount = 2 , DiscountType = DiscountType.Percentage, PercentageDiscount = 10},
+                new Promotion { BundleType = BundleType.Combination, SKUs = new List<string> { "C", "D" } }
             };
 
             //Act
+            var calculateService = new CalculateService();
+            var orderResults = calculateService.CalcualteOrder(order);
+
+            //Assert
         }
     }
 }
