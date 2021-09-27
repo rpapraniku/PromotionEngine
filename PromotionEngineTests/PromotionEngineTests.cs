@@ -29,7 +29,7 @@ namespace PromotionEngineTests
 
             //Act
             var calculateService = new CalculateService();
-            var orderResults = calculateService.CalcualteOrder(order);
+            var orderResults = calculateService.CalcualteOrder(order, promotions);
 
             //Assert
             //Assert.Equal(100,  )
@@ -58,7 +58,7 @@ namespace PromotionEngineTests
 
             //Act
             var calculateService = new CalculateService();
-            var orderResults = calculateService.CalcualteOrder(order);
+            var orderResults = calculateService.CalcualteOrder(order, promotions);
 
             //Assert
         }
@@ -86,7 +86,7 @@ namespace PromotionEngineTests
 
             //Act
             var calculateService = new CalculateService();
-            var orderResults = calculateService.CalcualteOrder(order);
+            var orderResults = calculateService.CalcualteOrder(order, promotions);
 
             //Assert
         }
