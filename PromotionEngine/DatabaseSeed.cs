@@ -37,12 +37,12 @@ namespace PromotionEngine
                         new Promotion
                         {
                             Id = 2,
-                            Title = "2 of B's for 45",
+                            Title = "2 of B's for 48",
                             BundleType = BundleType.Multiple,
                             SKU = "B",
                             Quantity = 2,
                             DiscountType = DiscountType.Percentage,
-                            PercentageDiscount = 10
+                            PercentageDiscount = 20
                         },
                         new Promotion
                         {
@@ -50,7 +50,7 @@ namespace PromotionEngine
                             Title = "C & D for 30",
                             BundleType = BundleType.Combination,
                             SKUs = new List<string> { "C", "D" },
-                            DiscountType = DiscountType.Percentage,
+                            DiscountType = DiscountType.FixedPrice,
                             FixedPriceDiscount = 30
                         });
 

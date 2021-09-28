@@ -119,5 +119,44 @@ namespace PromotionEngineTests
             Assert.Equal(150, orderResults.SingleItems.Sum(x => x.TotalPrice));
             Assert.Equal(354, totalSum);
         }
+
+        [Fact]
+        public void ScenarioD()
+        {
+            //Arrange
+            var order = new Order
+            {
+                Items = new List<OrderItem>
+                {
+                    new OrderItem { Quantity = 6, SKU = "A", Price = 50 },// 120
+                    new OrderItem { Quantity = 4, SKU = "B", Price = 30 },// 42 + 42 
+                    new OrderItem { Quantity = 2, SKU = "C", Price = 20 },
+                    new OrderItem { Quantity = 2, SKU = "D", Price = 15 },// 0
+                                                                          // 50 + 50 + 30 + 20
+                }
+            };
+
+            var promotions = new List<Promotion> {
+                new Promotion { BundleType = BundleType.Multiple, SKU = "A", Quantity = 3, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 130},
+                new Promotion { BundleType = BundleType.Multiple, SKU = "B", Quantity = 2 , DiscountType = DiscountType.Percentage, PercentageDiscount = 20},
+                new Promotion { BundleType = BundleType.Combination, SKUs = new List<string> { "C", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 }
+            };
+
+            //Act
+            var calculateService = new CalculateService();
+            var orderResults = calculateService.CalcualteOrder(order, promotions);
+
+            //Assert
+            //Assert
+            var totalSum = orderResults.SingleItems.Sum(x => x.TotalPrice) +
+                orderResults.MultipleBundleItems.Sum(x => x.Amount) +
+                orderResults.CombinationBundleItems.Sum(x => x.Amount);
+
+            //Assert.Equal(4, orderResults.SingleItems.Sum(x => x.ItemCount));
+            //Assert.Equal(204, orderResults.MultipleBundleItems.Sum(x => x.Amount));
+            //Assert.Equal(0, orderResults.CombinationBundleItems.Sum(x => x.Amount));
+            //Assert.Equal(150, orderResults.SingleItems.Sum(x => x.TotalPrice));
+            Assert.Equal(416, totalSum);
+        }
     }
 }
