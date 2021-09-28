@@ -19,9 +19,6 @@ Also we have 2 types of each BundleType: **DiscountType = DiscountType.FixedPric
 *For discount type **DiscountType.FixedPrice** we need to provide: **FixedPriceDiscount** which is the promotion quantity.*<br>
 *For discount type **DiscountType.Percentage** we need to provide: **PercentageDiscount** which is the promotion quantity.*<br>
 
-#### 1.BundleCalculator 
-
-
 ```
 new Promotion {
   Id = 1,
