@@ -120,7 +120,7 @@ namespace PromotionEngineTests
         }
 
         #region My tests
-        
+
         [Fact]
         public void ScenarioD()
         {
@@ -201,6 +201,42 @@ namespace PromotionEngineTests
             {
                 Items = new List<OrderItem>
                 {
+                    new OrderItem { Quantity = 0, SKU = "A", Price = 50 }, //0 
+                    new OrderItem { Quantity = 3, SKU = "B", Price = 30 }, //90
+                    new OrderItem { Quantity = 1, SKU = "C", Price = 20 }, //20
+                    new OrderItem { Quantity = 2, SKU = "D", Price = 15 }  //30
+                                                                          
+                }
+            };
+
+            var promotions = new List<Promotion>
+            {
+            };
+
+            //Act
+            var calculateService = new CalculateService();
+            var orderResults = calculateService.CalcualteOrder(order, promotions);
+
+            //Assert
+            var totalSum = orderResults.SingleItems.Sum(x => x.TotalPrice) +
+                orderResults.MultipleBundleItems.Sum(x => x.Amount) +
+                orderResults.CombinationBundleItems.Sum(x => x.Amount);
+
+            Assert.Equal(6, orderResults.SingleItems.Sum(x => x.ItemCount));
+            Assert.Equal(0, orderResults.MultipleBundleItems.Sum(x => x.Amount));
+            Assert.Equal(0, orderResults.CombinationBundleItems.Sum(x => x.Amount));
+            Assert.Equal(140, orderResults.SingleItems.Sum(x => x.TotalPrice));
+            Assert.Equal(140, totalSum);
+        }
+
+        [Fact]
+        public void ScenarioG()
+        {
+            //Arrange
+            var order = new Order
+            {
+                Items = new List<OrderItem>
+                {
                     new OrderItem { Quantity = 6, SKU = "A", Price = 50 },// 120
                     new OrderItem { Quantity = 4, SKU = "B", Price = 30 },// 42 + 42 
                     new OrderItem { Quantity = 2, SKU = "C", Price = 20 },
@@ -232,6 +268,71 @@ namespace PromotionEngineTests
             Assert.Equal(416, totalSum);
         }
 
+        [Fact]
+        public void ScenarioH()
+        {
+            //Arrange
+            var order = new Order
+            {
+                Items = new List<OrderItem>
+                {
+                    new OrderItem { Quantity = 99, SKU = "A", Price = 50 }, //0 
+                }
+            };
+
+            var promotions = new List<Promotion>
+            {
+                new Promotion { BundleType = BundleType.Multiple, SKU = "B", Quantity = 2 , DiscountType = DiscountType.Percentage, PercentageDiscount = 20},
+            };
+
+            //Act
+            var calculateService = new CalculateService();
+            var orderResults = calculateService.CalcualteOrder(order, promotions);
+
+            //Assert
+            var totalSum = orderResults.SingleItems.Sum(x => x.TotalPrice) +
+                orderResults.MultipleBundleItems.Sum(x => x.Amount) +
+                orderResults.CombinationBundleItems.Sum(x => x.Amount);
+
+            Assert.Equal(99, orderResults.SingleItems.Sum(x => x.ItemCount));
+            Assert.Equal(0, orderResults.MultipleBundleItems.Sum(x => x.Amount));
+            Assert.Equal(0, orderResults.CombinationBundleItems.Sum(x => x.Amount));
+            Assert.Equal(4950, orderResults.SingleItems.Sum(x => x.TotalPrice));
+            Assert.Equal(4950, totalSum);
+        }
+
+        [Fact]
+        public void ScenarioI()
+        {
+            //Arrange
+            var order = new Order
+            {
+                Items = new List<OrderItem>
+                {
+                    new OrderItem { Quantity = 8, SKU = "A", Price = 50 }, //0 
+                }
+            };
+
+            var promotions = new List<Promotion>
+            {
+                new Promotion { BundleType = BundleType.Combination, SKUs = new List<string> { "A", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 }
+            };
+
+            //Act
+            var calculateService = new CalculateService();
+            var orderResults = calculateService.CalcualteOrder(order, promotions);
+
+            //Assert
+            var totalSum = orderResults.SingleItems.Sum(x => x.TotalPrice) +
+                orderResults.MultipleBundleItems.Sum(x => x.Amount) +
+                orderResults.CombinationBundleItems.Sum(x => x.Amount);
+
+            Assert.Equal(8, orderResults.SingleItems.Sum(x => x.ItemCount));
+            Assert.Equal(0, orderResults.MultipleBundleItems.Sum(x => x.Amount));
+            Assert.Equal(0, orderResults.CombinationBundleItems.Sum(x => x.Amount));
+            Assert.Equal(400, orderResults.SingleItems.Sum(x => x.TotalPrice));
+            Assert.Equal(400, totalSum);
+        }
         #endregion
     }
 }
