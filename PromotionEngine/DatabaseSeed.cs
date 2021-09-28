@@ -12,7 +12,6 @@ namespace PromotionEngine
     {
         public static void Run(ServiceProvider serviceProvider)
         {
-
             using (var context = new InMemoryDbContext(serviceProvider.GetRequiredService<DbContextOptions<InMemoryDbContext>>()))
             {
                 try
@@ -54,8 +53,6 @@ namespace PromotionEngine
                             DiscountType = DiscountType.Percentage,
                             FixedPriceDiscount = 30
                         });
-
-
 
                     context.SaveChanges();
                 }

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace DataAccess.Entities
+﻿namespace DataAccess.Entities
 {
     public class OrderItem
     {

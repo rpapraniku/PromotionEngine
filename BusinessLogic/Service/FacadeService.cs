@@ -21,7 +21,7 @@ namespace BusinessLogic.Service
 
         public string CalculateOrder(Order order)
         {
-            var checkoutSummary = _calculateService.CalcualteOrder(order, null);
+            var checkoutSummary = _calculateService.CalcualteOrder(order, _context.Promotions.ToList());
 
             var displayResult = string.Empty;
 
@@ -29,7 +29,7 @@ namespace BusinessLogic.Service
             Console.WriteLine("------------------------");
             Console.WriteLine("SKU\t\tQty\t\tAmount");
             Console.WriteLine("------------------------");
-            
+
             //Console.Write($"{checkoutSummary.SingleItems.Select(x => x.SKU)}\t\t{product.Quantity}\t\t{product.Amount}\t\t{product.PromotionApplied}{Environment.NewLine}");
             //Console.Write($"{checkoutSummary.MultipleBundleItems.Select(x => x.SKU)}\t\t{product.Quantity}\t\t{product.Amount}\t\t{product.PromotionApplied}{Environment.NewLine}");
             //Console.Write($"{product.PromotionFormula}\t\t{product.Quantity}\t\t{product.Amount}\t\t{product.PromotionApplied}{Environment.NewLine}");
