@@ -2,9 +2,9 @@
 
 <br/>
 
-## **Promotion Engine Console Application**
+## **Promotion Engine - Console Application**
 
-### Solution Description
+### Brief description
 
 #### 1. BusinessLogic 
                         
