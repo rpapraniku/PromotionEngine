@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.DTO;
+using DataAccess.Entities;
 using System.Collections.Generic;
 using System.Linq;
 

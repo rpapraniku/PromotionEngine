@@ -1,6 +1,7 @@
 using BusinessLogic.DTO;
-using BusinessLogic.DTO.Enums;
 using BusinessLogic.Service;
+using DataAccess.Entities;
+using DataAccess.Enums;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;

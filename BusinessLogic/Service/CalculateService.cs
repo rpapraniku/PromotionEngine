@@ -1,7 +1,8 @@
 ﻿using BusinessLogic.Calculators;
 using BusinessLogic.DTO;
-using BusinessLogic.DTO.Enums;
 using BusinessLogic.Interface;
+using DataAccess.Entities;
+using DataAccess.Enums;
 using System.Collections.Generic;
 using System.Linq;
 

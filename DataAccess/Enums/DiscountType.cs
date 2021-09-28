@@ -1,4 +1,4 @@
-﻿namespace BusinessLogic.DTO.Enums
+﻿namespace DataAccess.Enums
 {
     public enum DiscountType
     {
