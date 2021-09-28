@@ -15,9 +15,9 @@ It terms of promotion below I have pasted the whole Promotion class that I thoug
 The promotion type is determined by **BundleType.Multiple || BundleType.Combination**.
 Also we have 2 types of each BundleType: **DiscountType = DiscountType.FixedPrice || DiscountType = DiscountType.Percentage**, in which we decide if we want to use % percentage || fixedPrices.
 
-*For promotion type **BundleType.Multiple** we need to provide: **Quantity** which is the promotion quantity.*
-*For discount type **DiscountType.FixedPrice** we need to provide: **FixedPriceDiscount** which is the promotion quantity.*
-*For discount type **DiscountType.Percentage** we need to provide: **PercentageDiscount** which is the promotion quantity.*
+*For promotion type **BundleType.Multiple** we need to provide: **Quantity** which is the promotion quantity.* <br>
+*For discount type **DiscountType.FixedPrice** we need to provide: **FixedPriceDiscount** which is the promotion quantity.*<br>
+*For discount type **DiscountType.Percentage** we need to provide: **PercentageDiscount** which is the promotion quantity.*<br>
 
 #### 1.BundleCalculator 
 
