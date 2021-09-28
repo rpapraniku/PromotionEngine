@@ -9,24 +9,32 @@ namespace BusinessLogic.Calculators
     {
         public static CheckoutSummary Calculate(CheckoutSummary checkoutSummary, List<OrderItem> orderItems, Promotion promotion)
         {
-            var bundleCount = orderItems.Min(x => x.Quantity);
+            var bundleCount = orderItems.Count > 1 ? orderItems.Min(x => x.Quantity) : 0;
             var bundleModulusItems = new List<OrderItem>();
             var bundleItemFit = new List<OrderItem>();
 
-            foreach (var item in orderItems)
+            if (orderItems.Count > 1)
             {
-                var bundleItemModulus = orderItems.Count > 1 ? item.Quantity - bundleCount : bundleCount;
-                var bundleItemCount = item.Quantity - bundleItemModulus;
-
-                if (bundleItemModulus != 0)
+                foreach (var item in orderItems)
                 {
-                    bundleModulusItems.Add(new OrderItem { Price = item.Price, SKU = item.SKU, Quantity = bundleItemModulus });
-                }
+                    var bundleItemModulus = item.Quantity - bundleCount;
+                    var bundleItemCount = item.Quantity - bundleItemModulus;
 
-                bundleItemFit.Add(new OrderItem { Price = item.Price, SKU = item.SKU, Quantity = bundleItemCount });
+                    if (bundleItemModulus != 0)
+                    {
+                        bundleModulusItems.Add(new OrderItem { Price = item.Price, SKU = item.SKU, Quantity = bundleItemModulus });
+                    }
+
+                    bundleItemFit.Add(new OrderItem { Price = item.Price, SKU = item.SKU, Quantity = bundleItemCount });
+                }
+            }
+            else
+            {
+                bundleModulusItems.Add(new OrderItem { Price = orderItems.FirstOrDefault().Price, SKU = orderItems.FirstOrDefault().SKU, Quantity = orderItems.FirstOrDefault().Quantity });
             }
 
-            if (orderItems.Count > 1)
+
+            if (bundleCount > 0)
             {
                 var priceAfterDiscount = 0.0;
                 var priceBeforeDiscount = 0.0;

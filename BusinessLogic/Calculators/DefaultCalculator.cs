@@ -8,8 +8,11 @@ namespace BusinessLogic.Calculators
     {
         public static CheckoutSummary Calculate(CheckoutSummary checkoutSummary, List<OrderItem> orderItems, List<Promotion> promotions)
         {
-            var itemsWithoutPromotion = orderItems.Select(item => item.SKU).Except(promotions.Select(p => p.SKU)).ToList();
+            var multiplePromotion = promotions.Where(p => !string.IsNullOrWhiteSpace(p.SKU)).Select(x => x.SKU).ToList();
+            var combinePromotions = promotions.Where(p => p.SKUs != null).SelectMany(x => x.SKUs).ToList();
+            var allPromotios = multiplePromotion.Union(combinePromotions).ToList();
 
+            var itemsWithoutPromotion = orderItems.Select(item => item.SKU).Except(allPromotios.Select(sku => sku)).ToList();
             var orderItemsWithoutPromotion = orderItems.Where(x => itemsWithoutPromotion.Contains(x.SKU)).ToList();
 
             foreach (var item in orderItemsWithoutPromotion)
