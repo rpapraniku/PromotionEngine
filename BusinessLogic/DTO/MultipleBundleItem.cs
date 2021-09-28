@@ -6,7 +6,7 @@ namespace BusinessLogic.DTO
     {
         public int Promotions { get; set; }
         public string SKU { get; set; }
-        public double PromotionDiscout { get; set; }
+        public double PromotionDiscount { get; set; }
         public double Amount { get; set; }
     }
 }

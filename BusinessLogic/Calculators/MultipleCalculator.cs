@@ -32,7 +32,7 @@ namespace BusinessLogic.Calculators
                 {
                     Promotions = bundleCount,
                     SKU = item.SKU,
-                    PromotionDiscout = priceBeforeDiscount - priceAfterDiscount,
+                    PromotionDiscount = priceBeforeDiscount - priceAfterDiscount,
                     Amount = priceAfterDiscount
                 });
             }

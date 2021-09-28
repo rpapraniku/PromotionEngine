@@ -26,19 +26,16 @@ namespace BusinessLogic.Service
             var displayResult = string.Empty;
 
             Console.WriteLine(Environment.NewLine);
-            Console.WriteLine("------------------------");
-            Console.WriteLine("SKU\t\tQty\t\tAmount");
-            Console.WriteLine("------------------------");
-
-            //Console.Write($"{checkoutSummary.SingleItems.Select(x => x.SKU)}\t\t{product.Quantity}\t\t{product.Amount}\t\t{product.PromotionApplied}{Environment.NewLine}");
-            //Console.Write($"{checkoutSummary.MultipleBundleItems.Select(x => x.SKU)}\t\t{product.Quantity}\t\t{product.Amount}\t\t{product.PromotionApplied}{Environment.NewLine}");
-            //Console.Write($"{product.PromotionFormula}\t\t{product.Quantity}\t\t{product.Amount}\t\t{product.PromotionApplied}{Environment.NewLine}");
 
             var totalSum = checkoutSummary.SingleItems.Sum(x => x.TotalPrice) +
                 checkoutSummary.MultipleBundleItems.Sum(x => x.Amount) +
                 checkoutSummary.CombinationBundleItems.Sum(x => x.Amount);
 
-            Console.Write($"{Environment.NewLine}\t\t\t\t  Total Amount: { totalSum }");
+            var totaldiscount = checkoutSummary.MultipleBundleItems.Sum(x => x.PromotionDiscount) +
+                checkoutSummary.CombinationBundleItems.Sum(x => x.PromotionDiscount);
+
+            Console.WriteLine($"Promotion discount:{ totaldiscount }");
+            Console.WriteLine($"Total Amount:{ totalSum }");
 
             return displayResult;
         }

@@ -8,13 +8,15 @@ namespace BusinessLogic.Calculators
 {
     public static class BundleCalculator
     {
+        //C =2 D = 1
+
         public static CheckoutSummary Calculate(CheckoutSummary checkoutSummary, List<OrderItem> orderItems, Promotion promotion)
         {
             var bundleCount = orderItems.Count > 1 ? orderItems.Min(x => x.Quantity) : 0;
             var bundleModulusItems = new List<OrderItem>();
             var bundleItemFit = new List<OrderItem>();
 
-            if (orderItems.Count > 1)
+            if (bundleCount >= 1)
             {
                 foreach (var item in orderItems)
                 {
@@ -31,7 +33,13 @@ namespace BusinessLogic.Calculators
             }
             else
             {
-                bundleModulusItems.Add(new OrderItem { Price = orderItems.FirstOrDefault().Price, SKU = orderItems.FirstOrDefault().SKU, Quantity = orderItems.FirstOrDefault().Quantity });
+                foreach (var item in orderItems)
+                {
+                    if (item.Quantity > 0)
+                    {
+                        bundleModulusItems.Add(new OrderItem { Price = item.Price, SKU = item.SKU, Quantity = item.Quantity });
+                    }
+                }
             }
 
 
@@ -43,6 +51,7 @@ namespace BusinessLogic.Calculators
                 {
                     if (promotion.DiscountType == DiscountType.FixedPrice)
                     {
+                        priceBeforeDiscount = bundleItemFit.Sum(item => item.Price * item.Quantity);
                         priceAfterDiscount = promotion.FixedPriceDiscount * bundleCount;
                     }
                     else if (promotion.DiscountType == DiscountType.Percentage)
@@ -56,7 +65,7 @@ namespace BusinessLogic.Calculators
                 {
                     BundleCount = orderItems.Sum(x => x.Quantity),
                     SKUs = orderItems.Select(x => x.SKU).ToList(),
-                    PromotionDiscout = priceBeforeDiscount - priceAfterDiscount,
+                    PromotionDiscount = priceBeforeDiscount - priceAfterDiscount,
                     Amount = priceAfterDiscount
                 });
             }
