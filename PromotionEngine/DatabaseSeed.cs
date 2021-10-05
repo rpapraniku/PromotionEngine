@@ -3,18 +3,22 @@ using DataAccess.Entities;
 using DataAccess.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 
 namespace PromotionEngine
 {
-    public class DatabaseSeed
+    public static class DatabaseSeed
     {
-        public static void Run(ServiceProvider serviceProvider)
+        public static IHost RunSeeds(this IHost host)
         {
-            using (var context = new InMemoryDbContext(serviceProvider.GetRequiredService<DbContextOptions<InMemoryDbContext>>()))
+            using (var scope = host.Services.CreateScope())
             {
-                try
+                var services = scope.ServiceProvider;
+                var dbContextOptions = services.GetRequiredService<DbContextOptions<InMemoryDbContext>>();
+
+                using (var context = new InMemoryDbContext(dbContextOptions))
                 {
                     context.OrderItems.AddRange(
                         new OrderItem { Id = 1, SKU = "A", Price = 50 },
@@ -55,12 +59,10 @@ namespace PromotionEngine
                         });
 
                     context.SaveChanges();
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
+
                 }
             }
+            return host;
         }
     }
 }

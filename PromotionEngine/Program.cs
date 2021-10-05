@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using BusinessLogic.DTO;
 using BusinessLogic.Interface;
-using System;
-using System.Linq;
-using DataAccess.Entities;
+using Microsoft.Extensions.Hosting;
+using DataAccess;
+using BusinessLogic.Service;
+using Microsoft.EntityFrameworkCore;
 
 namespace PromotionEngine
 {
@@ -11,35 +11,22 @@ namespace PromotionEngine
     {
         static void Main(string[] args)
         {
-            var serviceProvider = DependencyInjection.ConfigureServices();
-            DatabaseSeed.Run(serviceProvider);
+            CreateHostBuilder(args).Build().RunSeeds().Run();
+        }
 
-            var fasadeService = serviceProvider.GetService<IFacadeService>();
-            var products = fasadeService.GetAllProducts();
-
-            Console.WriteLine(fasadeService.DisplayPromotions());
-            Console.WriteLine("Products: " + string.Join(", ", products.Select(x => x.SKU)));
-
-            var order = new Order();
-            foreach (var product in products)
-            {
-                bool repeat = true;
-                while (repeat)
+        private static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            var hostBuilder = Host.CreateDefaultBuilder(args)
+                .ConfigureServices((hostContext, services) =>
                 {
-                    Console.Write($"Enter amount of product {product.SKU}: ");
-                    string input = Console.ReadLine();
+                    services.AddTransient<ICalculateService, CalculateService>();
+                    services.AddTransient<IFacadeService, FacadeService>();
+                    services.AddDbContext<InMemoryDbContext>(options => options.UseInMemoryDatabase("TestDatabase"));
+                    services.AddHostedService<PromotionEngineInit>();
+                })
+                .UseConsoleLifetime(o => o.SuppressStatusMessages = true);
 
-                    int quantity;
-                    if (int.TryParse(input, out quantity))
-                    {
-                        repeat = false;
-                        order.Items.Add(new OrderItem() { SKU = product.SKU, Quantity = quantity, Price = product.Price });
-                    }
-                }
-            }
-
-            Console.WriteLine(fasadeService.CalculateOrder(order));
-            Console.ReadLine();
+            return hostBuilder;
         }
     }
 }
