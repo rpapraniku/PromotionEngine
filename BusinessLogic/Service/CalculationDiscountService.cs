@@ -1,25 +1,29 @@
-﻿using BusinessLogic.Interface;
+﻿using BusinessLogic.DTO;
+using BusinessLogic.Interface;
+using DataAccess.Entities;
 using DataAccess.Enums;
+using System.Linq;
 
 namespace BusinessLogic.Service
 {
     public class CalculationDiscountService : ICalculationDiscountService
     {
         double priceAfterDiscount = 0.0;
-        public double CalculateDiscount(DiscountType discountType, double fixedPrice, double percentage, double price, int bundleCount, int bundleItemCount)
+        double priceBeforeDiscount = 0.0;
+        public (double, double) CalculateDiscount(AnalizeOrderItemsDTO analize, Promotion promotion)
         {
-            if (discountType == DiscountType.FixedPrice)
+            if (promotion.DiscountType == DiscountType.FixedPrice)
             {
-                //priceBeforeDiscount = promotion.Quantity * bundleCount * price;
-                priceAfterDiscount = fixedPrice * bundleCount;
+                priceBeforeDiscount = promotion.Quantity * analize.BundleCount * analize.ItemForProccessing.Sum(item => item.Price * item.Quantity);
+                priceAfterDiscount = promotion.FixedPriceDiscount * analize.BundleCount;
             }
             else
             {
-                var priceBeforeDiscount = price * bundleItemCount;
-                priceAfterDiscount = priceBeforeDiscount - priceBeforeDiscount * percentage / 100;
+                priceBeforeDiscount = analize.ItemForProccessing.Sum(item => item.Price * item.Quantity);
+                priceAfterDiscount = priceBeforeDiscount - priceBeforeDiscount * promotion.PercentageDiscount / 100;
             }
 
-            return priceAfterDiscount;
+            return (priceAfterDiscount, priceBeforeDiscount);
         }
     }
 }

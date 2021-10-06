@@ -8,11 +8,13 @@ namespace BusinessLogic.Service
 {
     public class CalculatorTypeService : ICalculatorTypeService
     {
-        ICalculationDiscountService _discountService;
+        private readonly ICalculationDiscountService _discountService;
+        private readonly ICalculationBusinessLogic _calculationBusinessLogic;
 
-        public CalculatorTypeService(ICalculationDiscountService discountService)
+        public CalculatorTypeService(ICalculationBusinessLogic calculationBusinessLogic, ICalculationDiscountService discountService)
         {
             _discountService = discountService;
+            _calculationBusinessLogic = calculationBusinessLogic;
         }
 
         public DefaultBase CalculateDefault(List<Promotion> promotions)
@@ -24,11 +26,11 @@ namespace BusinessLogic.Service
         {
             if (promotion.BundleType == DataAccess.Enums.BundleType.Multiple)
             {
-                return new MultipleCalculator(promotion, _discountService);
+                return new MultipleCalculator(promotion, _calculationBusinessLogic, _discountService);
             }
             else
             {
-                return new BundleCalculator(promotion, _discountService);
+                return new BundleCalculator(promotion, _calculationBusinessLogic, _discountService);
             }
         }
     }

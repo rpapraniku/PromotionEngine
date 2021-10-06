@@ -11,49 +11,40 @@ namespace BusinessLogic.Calculators
     {
         private readonly Promotion promotion;
         private readonly ICalculationDiscountService _calculationDiscountService;
+        private readonly ICalculationBusinessLogic _calculationBusinessLogic;
 
-        public MultipleCalculator(Promotion promotion, ICalculationDiscountService calculationDiscountService)
+        public MultipleCalculator(Promotion promotion, ICalculationBusinessLogic calculationBusinessLogic, ICalculationDiscountService calculationDiscountService)
         {
             _calculationDiscountService = calculationDiscountService;
+            _calculationBusinessLogic = calculationBusinessLogic;
             this.promotion = promotion;
         }
 
         public override CheckoutSummary Calculate(CheckoutSummary checkoutSummary, List<OrderItem> orderItems)
         {
-            var item = orderItems.FirstOrDefault(x => x.SKU == promotion.SKU);
-
-            if (item == null)
+            if (!orderItems.Any(x => x.SKU == promotion.SKU))
             {
                 return checkoutSummary;
             }
 
-            var bundleItemModulus = item.Quantity % promotion.Quantity;
-            var bundleItemCount = item.Quantity - bundleItemModulus;
-            var bundleCount = bundleItemCount / promotion.Quantity;
+            var analize = _calculationBusinessLogic.AnalizeOrderItems(orderItems, promotion);
 
-            if (bundleItemCount > 0)
+            if (analize.ItemForProccessing.Any())
             {
-                var priceAfterDiscount = _calculationDiscountService.CalculateDiscount(promotion.DiscountType, promotion.FixedPriceDiscount, promotion.PercentageDiscount, item.Price, bundleCount, bundleItemCount);
+                var (priceAfterDiscount, priceBeforeDiscount) = _calculationDiscountService.CalculateDiscount(analize, promotion);
 
                 checkoutSummary.MultipleBundleItems.Add(new MultipleBundleItem
                 {
-                    Promotions = bundleCount,
-                    SKU = item.SKU,
-                    //PromotionDiscount = priceBeforeDiscount - priceAfterDiscount,
+                    Promotions = analize.BundleCount,
+                    SKU = analize.ItemForProccessing.FirstOrDefault().SKU,
+                    PromotionDiscount = priceBeforeDiscount - priceAfterDiscount,
                     Amount = priceAfterDiscount
-                });
+                }); ;
             }
 
-            var singleItemCount = bundleItemModulus;
-            if (singleItemCount > 0)
+            if (analize.SingleItems.Any())
             {
-                checkoutSummary.SingleItems.Add(new SingleItem
-                {
-                    ItemCount = singleItemCount,
-                    PricePerItem = item.Price,
-                    TotalPrice = item.Price * singleItemCount,
-                    SKU = item.SKU
-                });
+                checkoutSummary.SingleItems.AddRange(analize.SingleItems);
             }
 
             return checkoutSummary;

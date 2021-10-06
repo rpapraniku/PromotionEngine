@@ -31,8 +31,9 @@ namespace PromotionEngineTests
                 new Promotion { BundleType = BundleType.Bundle, SKUs = new List<string> { "C", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 }
             };
 
+            var calculationBusinessLogic = new CalculationBusinessLogic();
             var calculationDiscountService = new CalculationDiscountService();
-            var calulatorTypeService = new CalculatorTypeService(calculationDiscountService);
+            var calulatorTypeService = new CalculatorTypeService(calculationBusinessLogic, calculationDiscountService);
             var calculateService = new CalculateService(calulatorTypeService);
 
             //Act
@@ -69,9 +70,9 @@ namespace PromotionEngineTests
                 new Promotion { BundleType = BundleType.Bundle, SKUs = new List<string> { "C", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 }
             };
 
-
+            var calculationBusinessLogic = new CalculationBusinessLogic();
             var calculationDiscountService = new CalculationDiscountService();
-            var calulatorTypeService = new CalculatorTypeService(calculationDiscountService);
+            var calulatorTypeService = new CalculatorTypeService(calculationBusinessLogic, calculationDiscountService);
             var calculateService = new CalculateService(calulatorTypeService);
 
             //Act
@@ -111,8 +112,9 @@ namespace PromotionEngineTests
                 new Promotion { BundleType = BundleType.Bundle, SKUs = new List<string> { "C", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 }
             };
 
+            var calculationBusinessLogic = new CalculationBusinessLogic();
             var calculationDiscountService = new CalculationDiscountService();
-            var calulatorTypeService = new CalculatorTypeService(calculationDiscountService);
+            var calulatorTypeService = new CalculatorTypeService(calculationBusinessLogic, calculationDiscountService);
             var calculateService = new CalculateService(calulatorTypeService);
 
             //Act
@@ -152,8 +154,9 @@ namespace PromotionEngineTests
                 new Promotion { BundleType = BundleType.Bundle, SKUs = new List<string> { "C", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 }
             };
 
+            var calculationBusinessLogic = new CalculationBusinessLogic();
             var calculationDiscountService = new CalculationDiscountService();
-            var calulatorTypeService = new CalculatorTypeService(calculationDiscountService);
+            var calulatorTypeService = new CalculatorTypeService(calculationBusinessLogic, calculationDiscountService);
             var calculateService = new CalculateService(calulatorTypeService);
 
             //Act
@@ -191,8 +194,9 @@ namespace PromotionEngineTests
                 new Promotion { BundleType = BundleType.Bundle, SKUs = new List<string> { "C", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 }
             };
 
+            var calculationBusinessLogic = new CalculationBusinessLogic();
             var calculationDiscountService = new CalculationDiscountService();
-            var calulatorTypeService = new CalculatorTypeService(calculationDiscountService);
+            var calulatorTypeService = new CalculatorTypeService(calculationBusinessLogic, calculationDiscountService);
             var calculateService = new CalculateService(calulatorTypeService);
 
             //Act
@@ -231,8 +235,9 @@ namespace PromotionEngineTests
             {
             };
 
+            var calculationBusinessLogic = new CalculationBusinessLogic();
             var calculationDiscountService = new CalculationDiscountService();
-            var calulatorTypeService = new CalculatorTypeService(calculationDiscountService);
+            var calulatorTypeService = new CalculatorTypeService(calculationBusinessLogic, calculationDiscountService);
             var calculateService = new CalculateService(calulatorTypeService);
 
 
@@ -273,8 +278,9 @@ namespace PromotionEngineTests
                 new Promotion { BundleType = BundleType.Bundle, SKUs = new List<string> { "C", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 }
             };
 
+            var calculationBusinessLogic = new CalculationBusinessLogic();
             var calculationDiscountService = new CalculationDiscountService();
-            var calulatorTypeService = new CalculatorTypeService(calculationDiscountService);
+            var calulatorTypeService = new CalculatorTypeService(calculationBusinessLogic, calculationDiscountService);
             var calculateService = new CalculateService(calulatorTypeService);
 
 
@@ -311,8 +317,9 @@ namespace PromotionEngineTests
                 new Promotion { BundleType = BundleType.Multiple, SKU = "B", Quantity = 2 , DiscountType = DiscountType.Percentage, PercentageDiscount = 20},
             };
 
+            var calculationBusinessLogic = new CalculationBusinessLogic();
             var calculationDiscountService = new CalculationDiscountService();
-            var calulatorTypeService = new CalculatorTypeService(calculationDiscountService);
+            var calulatorTypeService = new CalculatorTypeService(calculationBusinessLogic, calculationDiscountService);
             var calculateService = new CalculateService(calulatorTypeService);
 
             //Act
@@ -347,8 +354,9 @@ namespace PromotionEngineTests
                 new Promotion { BundleType = BundleType.Bundle, SKUs = new List<string> { "A", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 }
             };
 
+            var calculationBusinessLogic = new CalculationBusinessLogic();
             var calculationDiscountService = new CalculationDiscountService();
-            var calulatorTypeService = new CalculatorTypeService(calculationDiscountService);
+            var calulatorTypeService = new CalculatorTypeService(calculationBusinessLogic, calculationDiscountService);
             var calculateService = new CalculateService(calulatorTypeService);
 
             //Act

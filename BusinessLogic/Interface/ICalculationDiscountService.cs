@@ -1,9 +1,11 @@
-﻿using DataAccess.Enums;
+﻿using BusinessLogic.DTO;
+using DataAccess.Entities;
+using System;
 
 namespace BusinessLogic.Interface
 {
     public interface ICalculationDiscountService
     {
-        double CalculateDiscount(DiscountType discountType, double fixedPrice, double percentage, double price, int bundleCount, int bundleItemCount);
+        (double, double) CalculateDiscount(AnalizeOrderItemsDTO analize, Promotion promotion);
     }
 }

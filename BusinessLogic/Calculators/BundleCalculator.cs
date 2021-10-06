@@ -11,73 +11,40 @@ namespace BusinessLogic.Calculators
     {
         private readonly Promotion promotion;
         private readonly ICalculationDiscountService _calculationDiscountService;
+        private readonly ICalculationBusinessLogic _calculationBusinessLogic;
 
-        public BundleCalculator(Promotion promotion, ICalculationDiscountService calculationDiscountService)
+        public BundleCalculator(Promotion promotion, ICalculationBusinessLogic calculationBusinessLogic, ICalculationDiscountService calculationDiscountService)
         {
             this.promotion = promotion;
             _calculationDiscountService = calculationDiscountService;
+            _calculationBusinessLogic = calculationBusinessLogic;
         }
 
-        public override CheckoutSummary Calculate(CheckoutSummary checkoutSummary, List<OrderItem> items)
+        public override CheckoutSummary Calculate(CheckoutSummary checkoutSummary, List<OrderItem> orderItems)
         {
-            var orderItems = items.Where(x => promotion.SKUs.Contains(x.SKU)).ToList();
-            var bundleCount = orderItems.Count > 1 ? orderItems.Min(x => x.Quantity) : 0;
-            var bundleItemCount = 0;
-            var bundleModulusItems = new List<OrderItem>();
-            var bundleItemFit = new List<OrderItem>();
-
-            if (bundleCount >= 1)
+            if (!orderItems.Any(x => promotion.SKUs.Contains(x.SKU)) || orderItems == null)
             {
-                foreach (var item in orderItems)
-                {
-                    var bundleItemModulus = item.Quantity - bundleCount;
-                    bundleItemCount = item.Quantity - bundleItemModulus;
-
-                    if (bundleItemModulus != 0)
-                    {
-                        bundleModulusItems.Add(new OrderItem { Price = item.Price, SKU = item.SKU, Quantity = bundleItemModulus });
-                    }
-
-                    bundleItemFit.Add(new OrderItem { Price = item.Price, SKU = item.SKU, Quantity = bundleItemCount });
-                }
-            }
-            else
-            {
-                foreach (var item in orderItems)
-                {
-                    if (item.Quantity > 0)
-                    {
-                        bundleModulusItems.Add(new OrderItem { Price = item.Price, SKU = item.SKU, Quantity = item.Quantity });
-                    }
-                }
+                return checkoutSummary;
             }
 
+            var analize = _calculationBusinessLogic.AnalizeOrderItems(orderItems, promotion);
 
-            if (bundleCount > 0)
+            if (analize.ItemForProccessing.Any())
             {
-                var priceAfterDiscount = _calculationDiscountService.CalculateDiscount(promotion.DiscountType, promotion.FixedPriceDiscount, promotion.PercentageDiscount, bundleItemFit.Sum(item => item.Price * item.Quantity), bundleCount, bundleItemCount);
+                var (priceAfterDiscount, priceBeforeDiscount) = _calculationDiscountService.CalculateDiscount(analize, promotion);
 
                 checkoutSummary.CombinationBundleItems.Add(new CombinationBundleItem
                 {
-                    BundleCount = orderItems.Sum(x => x.Quantity),
-                    SKUs = orderItems.Select(x => x.SKU).ToList(),
-                    //PromotionDiscount = priceBeforeDiscount - priceAfterDiscount,
+                    BundleCount = analize.ItemForProccessing.Sum(x => x.Quantity),
+                    SKUs = analize.ItemForProccessing.Select(x => x.SKU).ToList(),
+                    PromotionDiscount = priceBeforeDiscount - priceAfterDiscount,
                     Amount = priceAfterDiscount
                 });
             }
 
-            if (bundleModulusItems.Count > 0)
+            if (analize.SingleItems.Any())
             {
-                foreach (var item in bundleModulusItems)
-                {
-                    checkoutSummary.SingleItems.Add(new SingleItem
-                    {
-                        ItemCount = item.Quantity,
-                        PricePerItem = item.Price,
-                        TotalPrice = item.Price * item.Quantity,
-                        SKU = item.SKU
-                    });
-                }
+                checkoutSummary.SingleItems.AddRange(analize.SingleItems);
             }
 
             return checkoutSummary;
