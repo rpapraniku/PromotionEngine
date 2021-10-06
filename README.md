@@ -2,21 +2,25 @@
 
 <br/>
 
-## **Promotion Engine Console Application**
+## **Promotion Engine - Console Application**
 
-### Solution Description
+### Brief description
 
 #### 1. BusinessLogic 
                         
 In business layer are DTOs and calculation classes like (**BundleCalculator**, **MultipleCalculator**, **DefaultCalculator**)
+
+- **BundleCalculator** - for promotions like: C + D
+- **MultipleCalculator** - for promotions like: 4A ..etc
+- **DefaultCalculator** - for non promotion items: Normal calculation 
 
 It terms of promotion below I have pasted the whole Promotion class that I thought it will fullfill the requrement for entering 2 types of promotions. 
 The promotion type is determined by **`BundleType.Multiple || BundleType.Combination`**.
 Also we have 2 types of each BundleType: **`DiscountType = DiscountType.FixedPrice` || `DiscountType = DiscountType.Percentage`**, in which we decide if we want to use % percentage || fixedPrices.
 
 *For promotion type **`BundleType.Multiple`** we need to provide: **`Quantity`** which is the promotion quantity.* <br>
-*For discount type **`DiscountType.FixedPrice`** we need to provide: **`FixedPriceDiscount`** which is the promotion quantity.*<br>
-*For discount type **`DiscountType.Percentage`** we need to provide: **`PercentageDiscount`** which is the promotion quantity.*<br>
+*For discount type **`DiscountType.FixedPrice`** we need to provide: **`FixedPriceDiscount`** which is the promotion fix price.*<br>
+*For discount type **`DiscountType.Percentage`** we need to provide: **`PercentageDiscount`** which is the promotion percentage discount.*<br>
 
 ```
 new Promotion {
