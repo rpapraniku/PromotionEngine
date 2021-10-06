@@ -12,6 +12,7 @@ namespace PromotionEngine
         {
             var serviceProvider = new ServiceCollection()
             .AddTransient<ICalculateService, CalculateService>()
+            .AddTransient<ICalculationDiscountService, CalculationDiscountService>()
             .AddTransient<IFacadeService, FacadeService>()
             .AddDbContext<InMemoryDbContext>(options => options.UseInMemoryDatabase("TestDatabase"))
             .BuildServiceProvider();

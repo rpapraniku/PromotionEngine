@@ -1,46 +1,28 @@
-﻿using BusinessLogic.Calculators;
-using BusinessLogic.DTO;
+﻿using BusinessLogic.DTO;
 using BusinessLogic.Interface;
 using DataAccess.Entities;
-using DataAccess.Enums;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace BusinessLogic.Service
 {
     public class CalculateService : ICalculateService
     {
+        private readonly ICalculatorTypeService _calculatorTypeService;
+        public CalculateService(ICalculatorTypeService calculatorTypeService)
+        {
+            _calculatorTypeService = calculatorTypeService;
+        }
+
         public CheckoutSummary CalcualteOrder(Order order, List<Promotion> promotions)
         {
-            CheckoutSummary checkoutSummary = new CheckoutSummary();
+            var checkoutSummary = new CheckoutSummary();
 
             foreach (var promotion in promotions)
             {
-                if (promotion.BundleType == BundleType.Multiple)
-                {
-                    var item = order.Items.FirstOrDefault(x => x.SKU == promotion.SKU);
-                    if (item == null)
-                    {
-                        // item not on the bucket list
-                        continue;
-                    }
-
-                    checkoutSummary = MultipleCalculator.Calculate(checkoutSummary, item, promotion);
-                }
-                else if (promotion.BundleType == BundleType.Combination)
-                {
-                    var bundleItems = order.Items.Where(x => promotion.SKUs.Contains(x.SKU)).ToList();
-                    if (bundleItems == null)
-                    {
-                        // item not on the bucket list
-                        continue;
-                    }
-
-                    checkoutSummary = BundleCalculator.Calculate(checkoutSummary, bundleItems, promotion);
-                }
+                checkoutSummary = _calculatorTypeService.CalculateUsingPromotionType(promotion).Calculate(checkoutSummary, order.Items);
             }
 
-            checkoutSummary = DefaultCalculator.Calculate(checkoutSummary, order.Items, promotions);
+            checkoutSummary = _calculatorTypeService.CalculateDefault(promotions).Calculate(checkoutSummary, order.Items);
 
             return checkoutSummary;
         }

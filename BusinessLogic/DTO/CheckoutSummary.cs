@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using BusinessLogic.Calculators.Base;
+using System.Collections.Generic;
 
 namespace BusinessLogic.DTO
 {

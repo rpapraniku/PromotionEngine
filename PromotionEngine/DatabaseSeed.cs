@@ -52,7 +52,7 @@ namespace PromotionEngine
                         {
                             Id = 3,
                             Title = "C & D for 30",
-                            BundleType = BundleType.Combination,
+                            BundleType = BundleType.Bundle,
                             SKUs = new List<string> { "C", "D" },
                             DiscountType = DiscountType.FixedPrice,
                             FixedPriceDiscount = 30

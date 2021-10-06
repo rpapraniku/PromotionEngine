@@ -19,6 +19,8 @@ namespace PromotionEngine
             var hostBuilder = Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
+                    services.AddTransient<ICalculationDiscountService, CalculationDiscountService>();
+                    services.AddTransient<ICalculatorTypeService, CalculatorTypeService>();
                     services.AddTransient<ICalculateService, CalculateService>();
                     services.AddTransient<IFacadeService, FacadeService>();
                     services.AddDbContext<InMemoryDbContext>(options => options.UseInMemoryDatabase("TestDatabase"));

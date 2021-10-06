@@ -1,38 +1,45 @@
-﻿using BusinessLogic.DTO;
+﻿using BusinessLogic.Calculators.Base;
+using BusinessLogic.DTO;
+using BusinessLogic.Interface;
 using DataAccess.Entities;
-using DataAccess.Enums;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BusinessLogic.Calculators
 {
-    public static class MultipleCalculator
+    public class MultipleCalculator : CalculateBase
     {
-        public static CheckoutSummary Calculate(CheckoutSummary checkoutSummary, OrderItem item, Promotion promotion)
+        private readonly Promotion promotion;
+        private readonly ICalculationDiscountService _calculationDiscountService;
+
+        public MultipleCalculator(Promotion promotion, ICalculationDiscountService calculationDiscountService)
         {
+            _calculationDiscountService = calculationDiscountService;
+            this.promotion = promotion;
+        }
+
+        public override CheckoutSummary Calculate(CheckoutSummary checkoutSummary, List<OrderItem> orderItems)
+        {
+            var item = orderItems.FirstOrDefault(x => x.SKU == promotion.SKU);
+
+            if (item == null)
+            {
+                return checkoutSummary;
+            }
+
             var bundleItemModulus = item.Quantity % promotion.Quantity;
             var bundleItemCount = item.Quantity - bundleItemModulus;
             var bundleCount = bundleItemCount / promotion.Quantity;
 
             if (bundleItemCount > 0)
             {
-                var priceAfterDiscount = 0.0;
-                var priceBeforeDiscount = 0.0;
-
-                if (promotion.DiscountType == DiscountType.FixedPrice)
-                {
-                    priceBeforeDiscount = promotion.Quantity * bundleCount * item.Price;
-                    priceAfterDiscount = promotion.FixedPriceDiscount * bundleCount;
-                }
-                else if (promotion.DiscountType == DiscountType.Percentage)
-                {
-                    priceBeforeDiscount = item.Price * bundleItemCount;
-                    priceAfterDiscount = priceBeforeDiscount - priceBeforeDiscount * promotion.PercentageDiscount / 100;
-                }
+                var priceAfterDiscount = _calculationDiscountService.CalculateDiscount(promotion.DiscountType, promotion.FixedPriceDiscount, promotion.PercentageDiscount, item.Price, bundleCount, bundleItemCount);
 
                 checkoutSummary.MultipleBundleItems.Add(new MultipleBundleItem
                 {
                     Promotions = bundleCount,
                     SKU = item.SKU,
-                    PromotionDiscount = priceBeforeDiscount - priceAfterDiscount,
+                    //PromotionDiscount = priceBeforeDiscount - priceAfterDiscount,
                     Amount = priceAfterDiscount
                 });
             }

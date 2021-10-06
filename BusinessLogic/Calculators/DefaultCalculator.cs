@@ -1,16 +1,21 @@
-﻿using BusinessLogic.DTO;
+﻿using BusinessLogic.Calculators.Base;
+using BusinessLogic.DTO;
 using DataAccess.Entities;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace BusinessLogic.Calculators
 {
-    public static class DefaultCalculator
+    public class DefaultCalculator : DefaultBase
     {
-        public static CheckoutSummary Calculate(CheckoutSummary checkoutSummary, List<OrderItem> orderItems, List<Promotion> promotions)
+        public DefaultCalculator(List<Promotion> promotions) : base(promotions)
         {
-            var multiplePromotion = promotions.Where(p => !string.IsNullOrWhiteSpace(p.SKU)).Select(x => x.SKU).ToList();
-            var combinePromotions = promotions.Where(p => p.SKUs != null).SelectMany(x => x.SKUs).ToList();
+        }
+
+        public override CheckoutSummary Calculate(CheckoutSummary checkoutSummary, List<OrderItem> orderItems)
+        {
+            var multiplePromotion = Promotions.Where(p => !string.IsNullOrWhiteSpace(p.SKU)).Select(x => x.SKU).ToList();
+            var combinePromotions = Promotions.Where(p => p.SKUs != null).SelectMany(x => x.SKUs).ToList();
             var allPromotios = multiplePromotion.Union(combinePromotions).ToList();
 
             var itemsWithoutPromotion = orderItems.Select(item => item.SKU).Except(allPromotios.Select(sku => sku)).ToList();
@@ -26,7 +31,6 @@ namespace BusinessLogic.Calculators
                     SKU = item.SKU
                 });
             }
-
             return checkoutSummary;
         }
     }

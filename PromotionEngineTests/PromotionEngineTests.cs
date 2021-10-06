@@ -2,6 +2,7 @@ using BusinessLogic.DTO;
 using BusinessLogic.Service;
 using DataAccess.Entities;
 using DataAccess.Enums;
+using NSubstitute;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -27,17 +28,21 @@ namespace PromotionEngineTests
             var promotions = new List<Promotion> {
                 new Promotion { BundleType = BundleType.Multiple, SKU = "A", Quantity = 3, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 130},
                 new Promotion { BundleType = BundleType.Multiple, SKU = "B", Quantity = 2 , DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 45},
-                new Promotion { BundleType = BundleType.Combination, SKUs = new List<string> { "C", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 }
+                new Promotion { BundleType = BundleType.Bundle, SKUs = new List<string> { "C", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 }
             };
 
+            var calculationDiscountService = new CalculationDiscountService();
+            var calulatorTypeService = new CalculatorTypeService(calculationDiscountService);
+            var calculateService = new CalculateService(calulatorTypeService);
+
             //Act
-            var calculateService = new CalculateService();
             var orderResults = calculateService.CalcualteOrder(order, promotions);
 
             var totalSum = orderResults.SingleItems.Sum(x => x.TotalPrice) +
                 orderResults.MultipleBundleItems.Sum(x => x.Amount) +
                 orderResults.CombinationBundleItems.Sum(x => x.Amount);
 
+            //Assert
             Assert.Equal(3, orderResults.SingleItems.Sum(x => x.ItemCount));
             Assert.Equal(0, orderResults.MultipleBundleItems.Sum(x => x.Amount));
             Assert.Equal(0, orderResults.CombinationBundleItems.Sum(x => x.Amount));
@@ -61,11 +66,15 @@ namespace PromotionEngineTests
             var promotions = new List<Promotion> {
                 new Promotion { BundleType = BundleType.Multiple, SKU = "A", Quantity = 3, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 130},
                 new Promotion { BundleType = BundleType.Multiple, SKU = "B", Quantity = 2 , DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 45},
-                new Promotion { BundleType = BundleType.Combination, SKUs = new List<string> { "C", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 }
+                new Promotion { BundleType = BundleType.Bundle, SKUs = new List<string> { "C", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 }
             };
 
+
+            var calculationDiscountService = new CalculationDiscountService();
+            var calulatorTypeService = new CalculatorTypeService(calculationDiscountService);
+            var calculateService = new CalculateService(calulatorTypeService);
+
             //Act
-            var calculateService = new CalculateService();
             var orderResults = calculateService.CalcualteOrder(order, promotions);
 
             //Assert
@@ -96,14 +105,17 @@ namespace PromotionEngineTests
                 }
             };
 
-            var promotions = new List<Promotion> {
+            var promotions = new List<Promotion>() {
                 new Promotion { BundleType = BundleType.Multiple, SKU = "A", Quantity = 3, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 130},
                 new Promotion { BundleType = BundleType.Multiple, SKU = "B", Quantity = 2 , DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 45},
-                new Promotion { BundleType = BundleType.Combination, SKUs = new List<string> { "C", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 }
+                new Promotion { BundleType = BundleType.Bundle, SKUs = new List<string> { "C", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 }
             };
 
+            var calculationDiscountService = new CalculationDiscountService();
+            var calulatorTypeService = new CalculatorTypeService(calculationDiscountService);
+            var calculateService = new CalculateService(calulatorTypeService);
+
             //Act
-            var calculateService = new CalculateService();
             var orderResults = calculateService.CalcualteOrder(order, promotions);
 
             //Assert
@@ -137,11 +149,14 @@ namespace PromotionEngineTests
             var promotions = new List<Promotion> {
                 new Promotion { BundleType = BundleType.Multiple, SKU = "A", Quantity = 3, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 130},
                 new Promotion { BundleType = BundleType.Multiple, SKU = "B", Quantity = 2 , DiscountType = DiscountType.Percentage, PercentageDiscount = 20},
-                new Promotion { BundleType = BundleType.Combination, SKUs = new List<string> { "C", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 }
+                new Promotion { BundleType = BundleType.Bundle, SKUs = new List<string> { "C", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 }
             };
 
+            var calculationDiscountService = new CalculationDiscountService();
+            var calulatorTypeService = new CalculatorTypeService(calculationDiscountService);
+            var calculateService = new CalculateService(calulatorTypeService);
+
             //Act
-            var calculateService = new CalculateService();
             var orderResults = calculateService.CalcualteOrder(order, promotions);
 
             //Assert
@@ -173,11 +188,14 @@ namespace PromotionEngineTests
             var promotions = new List<Promotion> {
                 new Promotion { BundleType = BundleType.Multiple, SKU = "A", Quantity = 3, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 130},
                 new Promotion { BundleType = BundleType.Multiple, SKU = "B", Quantity = 2 , DiscountType = DiscountType.Percentage, PercentageDiscount = 20},
-                new Promotion { BundleType = BundleType.Combination, SKUs = new List<string> { "C", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 }
+                new Promotion { BundleType = BundleType.Bundle, SKUs = new List<string> { "C", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 }
             };
 
+            var calculationDiscountService = new CalculationDiscountService();
+            var calulatorTypeService = new CalculatorTypeService(calculationDiscountService);
+            var calculateService = new CalculateService(calulatorTypeService);
+
             //Act
-            var calculateService = new CalculateService();
             var orderResults = calculateService.CalcualteOrder(order, promotions);
 
             //Assert
@@ -213,8 +231,12 @@ namespace PromotionEngineTests
             {
             };
 
+            var calculationDiscountService = new CalculationDiscountService();
+            var calulatorTypeService = new CalculatorTypeService(calculationDiscountService);
+            var calculateService = new CalculateService(calulatorTypeService);
+
+
             //Act
-            var calculateService = new CalculateService();
             var orderResults = calculateService.CalcualteOrder(order, promotions);
 
             //Assert
@@ -248,11 +270,15 @@ namespace PromotionEngineTests
             var promotions = new List<Promotion> {
                 new Promotion { BundleType = BundleType.Multiple, SKU = "A", Quantity = 3, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 130},
                 new Promotion { BundleType = BundleType.Multiple, SKU = "B", Quantity = 2 , DiscountType = DiscountType.Percentage, PercentageDiscount = 20},
-                new Promotion { BundleType = BundleType.Combination, SKUs = new List<string> { "C", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 }
+                new Promotion { BundleType = BundleType.Bundle, SKUs = new List<string> { "C", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 }
             };
 
+            var calculationDiscountService = new CalculationDiscountService();
+            var calulatorTypeService = new CalculatorTypeService(calculationDiscountService);
+            var calculateService = new CalculateService(calulatorTypeService);
+
+
             //Act
-            var calculateService = new CalculateService();
             var orderResults = calculateService.CalcualteOrder(order, promotions);
 
             //Assert
@@ -285,8 +311,11 @@ namespace PromotionEngineTests
                 new Promotion { BundleType = BundleType.Multiple, SKU = "B", Quantity = 2 , DiscountType = DiscountType.Percentage, PercentageDiscount = 20},
             };
 
+            var calculationDiscountService = new CalculationDiscountService();
+            var calulatorTypeService = new CalculatorTypeService(calculationDiscountService);
+            var calculateService = new CalculateService(calulatorTypeService);
+
             //Act
-            var calculateService = new CalculateService();
             var orderResults = calculateService.CalcualteOrder(order, promotions);
 
             //Assert
@@ -315,11 +344,14 @@ namespace PromotionEngineTests
 
             var promotions = new List<Promotion>
             {
-                new Promotion { BundleType = BundleType.Combination, SKUs = new List<string> { "A", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 }
+                new Promotion { BundleType = BundleType.Bundle, SKUs = new List<string> { "A", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 }
             };
 
+            var calculationDiscountService = new CalculationDiscountService();
+            var calulatorTypeService = new CalculatorTypeService(calculationDiscountService);
+            var calculateService = new CalculateService(calulatorTypeService);
+
             //Act
-            var calculateService = new CalculateService();
             var orderResults = calculateService.CalcualteOrder(order, promotions);
 
             //Assert

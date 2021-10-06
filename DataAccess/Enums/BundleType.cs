@@ -3,6 +3,7 @@
     public enum BundleType
     {
         Multiple,
-        Combination
+        Bundle,
+        Default
     }
 }

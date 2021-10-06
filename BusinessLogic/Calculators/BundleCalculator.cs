@@ -1,18 +1,28 @@
-﻿using BusinessLogic.DTO;
+﻿using BusinessLogic.Calculators.Base;
+using BusinessLogic.DTO;
+using BusinessLogic.Interface;
 using DataAccess.Entities;
-using DataAccess.Enums;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace BusinessLogic.Calculators
 {
-    public static class BundleCalculator
+    public class BundleCalculator : CalculateBase
     {
-        //C =2 D = 1
+        private readonly Promotion promotion;
+        private readonly ICalculationDiscountService _calculationDiscountService;
 
-        public static CheckoutSummary Calculate(CheckoutSummary checkoutSummary, List<OrderItem> orderItems, Promotion promotion)
+        public BundleCalculator(Promotion promotion, ICalculationDiscountService calculationDiscountService)
         {
+            this.promotion = promotion;
+            _calculationDiscountService = calculationDiscountService;
+        }
+
+        public override CheckoutSummary Calculate(CheckoutSummary checkoutSummary, List<OrderItem> items)
+        {
+            var orderItems = items.Where(x => promotion.SKUs.Contains(x.SKU)).ToList();
             var bundleCount = orderItems.Count > 1 ? orderItems.Min(x => x.Quantity) : 0;
+            var bundleItemCount = 0;
             var bundleModulusItems = new List<OrderItem>();
             var bundleItemFit = new List<OrderItem>();
 
@@ -21,7 +31,7 @@ namespace BusinessLogic.Calculators
                 foreach (var item in orderItems)
                 {
                     var bundleItemModulus = item.Quantity - bundleCount;
-                    var bundleItemCount = item.Quantity - bundleItemModulus;
+                    bundleItemCount = item.Quantity - bundleItemModulus;
 
                     if (bundleItemModulus != 0)
                     {
@@ -45,27 +55,13 @@ namespace BusinessLogic.Calculators
 
             if (bundleCount > 0)
             {
-                var priceAfterDiscount = 0.0;
-                var priceBeforeDiscount = 0.0;
-                if (bundleCount > 0)
-                {
-                    if (promotion.DiscountType == DiscountType.FixedPrice)
-                    {
-                        priceBeforeDiscount = bundleItemFit.Sum(item => item.Price * item.Quantity);
-                        priceAfterDiscount = promotion.FixedPriceDiscount * bundleCount;
-                    }
-                    else if (promotion.DiscountType == DiscountType.Percentage)
-                    {
-                        priceBeforeDiscount = bundleItemFit.Sum(item => item.Price * item.Quantity);
-                        priceAfterDiscount = priceBeforeDiscount - priceBeforeDiscount * promotion.PercentageDiscount / 100;
-                    }
-                }
+                var priceAfterDiscount = _calculationDiscountService.CalculateDiscount(promotion.DiscountType, promotion.FixedPriceDiscount, promotion.PercentageDiscount, bundleItemFit.Sum(item => item.Price * item.Quantity), bundleCount, bundleItemCount);
 
                 checkoutSummary.CombinationBundleItems.Add(new CombinationBundleItem
                 {
                     BundleCount = orderItems.Sum(x => x.Quantity),
                     SKUs = orderItems.Select(x => x.SKU).ToList(),
-                    PromotionDiscount = priceBeforeDiscount - priceAfterDiscount,
+                    //PromotionDiscount = priceBeforeDiscount - priceAfterDiscount,
                     Amount = priceAfterDiscount
                 });
             }
