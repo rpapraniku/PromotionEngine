@@ -34,8 +34,8 @@ namespace BusinessLogic.Service
                         {
                             PricePerItem = item.Price,
                             SKU = item.SKU,
-                            ItemCount = x.BundleItemModulus,
-                            TotalPrice = item.Price * x.BundleItemModulus
+                            ItemCount = bundleItemModulus,
+                            TotalPrice = item.Price * bundleItemModulus
                         });
                     }
 

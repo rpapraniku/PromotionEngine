@@ -10,11 +10,28 @@ namespace BusinessLogic.Service
     {
         double priceAfterDiscount = 0.0;
         double priceBeforeDiscount = 0.0;
-        public (double, double) CalculateDiscount(AnalizeOrderItemsDTO analize, Promotion promotion)
+
+        public (double, double) BundleCalculateDiscount(AnalizeOrderItemsDTO analize, Promotion promotion)
         {
             if (promotion.DiscountType == DiscountType.FixedPrice)
             {
-                priceBeforeDiscount = promotion.Quantity * analize.BundleCount * analize.ItemForProccessing.Sum(item => item.Price * item.Quantity);
+                priceBeforeDiscount = analize.ItemForProccessing.Sum(item => item.Price * item.Quantity);
+                priceAfterDiscount = promotion.FixedPriceDiscount * analize.BundleCount;
+            }
+            else
+            {
+                priceBeforeDiscount = analize.ItemForProccessing.Sum(item => item.Price * item.Quantity);
+                priceAfterDiscount = priceBeforeDiscount - priceBeforeDiscount * promotion.PercentageDiscount / 100;
+            }
+
+            return (priceAfterDiscount, priceBeforeDiscount);
+        }
+
+        public (double, double) MultipleCalculateDiscount(AnalizeOrderItemsDTO analize, Promotion promotion)
+        {
+            if (promotion.DiscountType == DiscountType.FixedPrice)
+            {
+                priceBeforeDiscount = promotion.Quantity * analize.BundleCount * analize.ItemForProccessing.First().Price;
                 priceAfterDiscount = promotion.FixedPriceDiscount * analize.BundleCount;
             }
             else

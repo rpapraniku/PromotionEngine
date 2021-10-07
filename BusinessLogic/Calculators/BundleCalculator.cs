@@ -31,7 +31,7 @@ namespace BusinessLogic.Calculators
 
             if (rulesDTO.ItemForProccessing.Any())
             {
-                var (priceAfterDiscount, priceBeforeDiscount) = _calculationDiscountService.CalculateDiscount(rulesDTO, promotion);
+                var (priceAfterDiscount, priceBeforeDiscount) = _calculationDiscountService.BundleCalculateDiscount(rulesDTO, promotion);
 
                 checkoutSummary.CombinationBundleItems.Add(new CombinationBundleItem
                 {
