@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace PromotionEngineTests
+namespace PromotionEngineTests.CalculationServiceTests
 {
     public class PromotionEngineTests
     {
@@ -374,5 +374,6 @@ namespace PromotionEngineTests
             Assert.Equal(400, totalSum);
         }
         #endregion
+
     }
 }
