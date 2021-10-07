@@ -6,6 +6,8 @@ namespace BusinessLogic.Interface
 {
     public interface ICalculationBusinessLogic
     {
-        AnalizeOrderItemsDTO AnalizeOrderItems(List<OrderItem> orderItems, Promotion promotion);
+        AnalizeOrderItemsDTO BundleBusinessRules(List<OrderItem> orderItems, Promotion promotion);
+        AnalizeOrderItemsDTO MultipleBusinessRules(List<OrderItem> orderItems, Promotion promotion);
+
     }
 }

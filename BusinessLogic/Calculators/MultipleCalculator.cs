@@ -27,24 +27,24 @@ namespace BusinessLogic.Calculators
                 return checkoutSummary;
             }
 
-            var analize = _calculationBusinessLogic.AnalizeOrderItems(orderItems, promotion);
+            var rulesDTO = _calculationBusinessLogic.MultipleBusinessRules(orderItems, promotion);
 
-            if (analize.ItemForProccessing.Any())
+            if (rulesDTO.ItemForProccessing.Any())
             {
-                var (priceAfterDiscount, priceBeforeDiscount) = _calculationDiscountService.CalculateDiscount(analize, promotion);
+                var (priceAfterDiscount, priceBeforeDiscount) = _calculationDiscountService.CalculateDiscount(rulesDTO, promotion);
 
                 checkoutSummary.MultipleBundleItems.Add(new MultipleBundleItem
                 {
-                    Promotions = analize.BundleCount,
-                    SKU = analize.ItemForProccessing.FirstOrDefault().SKU,
+                    Promotions = rulesDTO.BundleCount,
+                    SKU = rulesDTO.ItemForProccessing.FirstOrDefault().SKU,
                     PromotionDiscount = priceBeforeDiscount - priceAfterDiscount,
                     Amount = priceAfterDiscount
                 }); ;
             }
 
-            if (analize.SingleItems.Any())
+            if (rulesDTO.SingleItems.Any())
             {
-                checkoutSummary.SingleItems.AddRange(analize.SingleItems);
+                checkoutSummary.SingleItems.AddRange(rulesDTO.SingleItems);
             }
 
             return checkoutSummary;
