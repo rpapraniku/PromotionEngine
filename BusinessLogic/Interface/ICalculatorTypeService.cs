@@ -6,8 +6,7 @@ namespace BusinessLogic.Interface
 {
     public interface ICalculatorTypeService
     {
-        CalculateBase CalculateUsingPromotionType(Promotion promotion);
-
-        DefaultBase CalculateDefault(List<Promotion> promotions);
+        CalculateBase GetCalculatorType(Promotion promotion);
+        DefaultBase GetDefaultCalculator(List<Promotion> promotions);
     }
 }

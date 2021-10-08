@@ -19,8 +19,6 @@ namespace PromotionEngine
             var hostBuilder = Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddTransient<ICalculationBusinessLogic, CalculationBusinessLogic>();
-                    services.AddTransient<ICalculationDiscountService, CalculationDiscountService>();
                     services.AddTransient<ICalculatorTypeService, CalculatorTypeService>();
                     services.AddTransient<ICalculateService, CalculateService>();
                     services.AddTransient<IFacadeService, FacadeService>();

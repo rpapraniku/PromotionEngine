@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using DataAccess.Enums;
 
-namespace BusinessLogic.DTO
+namespace BusinessLogic.DTO.BundleItemDTO
 {
-    public class CombinationBundleItem
+    public class BundleItem
     {
         public int BundleCount { get; set; }
-        public List<string> SKUs { get; set; }
         public double PromotionDiscount { get; set; }
+        public DiscountType DiscountType { get; set; }
         public double Amount { get; set; }
     }
 }

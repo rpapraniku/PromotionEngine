@@ -19,10 +19,10 @@ namespace BusinessLogic.Service
 
             foreach (var promotion in promotions)
             {
-                checkoutSummary = _calculatorTypeService.CalculateUsingPromotionType(promotion).Calculate(checkoutSummary, order.Items);
+                checkoutSummary = _calculatorTypeService.GetCalculatorType(promotion).Calculate(checkoutSummary, order.Items);
             }
 
-            checkoutSummary = _calculatorTypeService.CalculateDefault(promotions).Calculate(checkoutSummary, order.Items);
+            checkoutSummary = _calculatorTypeService.GetDefaultCalculator(promotions).Calculate(checkoutSummary, order.Items);
 
             return checkoutSummary;
         }

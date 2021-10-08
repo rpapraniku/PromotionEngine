@@ -1,14 +1,11 @@
 ﻿using BusinessLogic.DTO;
+using BusinessLogic.DTO.BundleItemDTO;
 using DataAccess.Entities;
-using System;
 
 namespace BusinessLogic.Interface
 {
     public interface ICalculationDiscountService
     {
-        (double, double) MultipleCalculateDiscount(AnalizeOrderItemsDTO analize, Promotion promotion);
-
-        (double, double) BundleCalculateDiscount(AnalizeOrderItemsDTO analize, Promotion promotion);
-
+        BundleItem CalculateDiscount(AnalizeOrderItemsDTO rulesDTO, Promotion promotion);
     }
 }

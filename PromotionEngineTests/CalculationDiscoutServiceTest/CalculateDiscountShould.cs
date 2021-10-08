@@ -1,5 +1,7 @@
 ﻿using BusinessLogic.DTO;
 using BusinessLogic.Service;
+using BusinessLogic.Service.BusinessRules;
+using BusinessLogic.Service.DiscountTypes;
 using DataAccess.Entities;
 using DataAccess.Enums;
 using System;
@@ -32,16 +34,17 @@ namespace PromotionEngineTests.CalculationDiscoutServiceTest
                 new Promotion{ BundleType = BundleType.Bundle, SKUs = new List<string> { "C", "Adidas" }, DiscountType = DiscountType.Percentage, PercentageDiscount = 20 }
             };
 
-            var calculationBusinessLogic = new CalculationBusinessLogic();
-            var calculationDiscountService = new CalculationDiscountService();
+            var calculationBusinessLogic = new BundleBusinessRules();
+            var bundleDiscount = new BundleDiscount();
+
 
             double totalAmount = 0.0;
             //Act
             foreach (var promotion in promotions)
             {
-                var analizeOrderItemsDTO = calculationBusinessLogic.BundleBusinessRules(orderItems, promotion);
-                var (priceAferDiscount, priceBeforeDiscont) = calculationDiscountService.BundleCalculateDiscount(analizeOrderItemsDTO, promotion);
-                totalAmount += priceAferDiscount;
+                var analizeOrderItemsDTO = calculationBusinessLogic.ApplyBusinessRules(orderItems, promotion);
+                var bundleItem = bundleDiscount.CalculateDiscount(analizeOrderItemsDTO, promotion);
+                totalAmount += bundleItem.Amount;
             }
 
             //Assert
@@ -69,25 +72,22 @@ namespace PromotionEngineTests.CalculationDiscoutServiceTest
                 new Promotion{ BundleType = BundleType.Bundle, SKUs = new List<string> { "C", "Adidas" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 100 }
             };
 
-            var calculationBusinessLogic = new CalculationBusinessLogic();
-            var calculationDiscountService = new CalculationDiscountService();
+            var calculationBusinessLogic = new BundleBusinessRules();
+            var bundleDiscount = new BundleDiscount();
 
-            double totalAferDiscountAmount = 0.0;
-            double totalBeforeDiscountAmount = 0.0;
 
+            double totalAmount = 0.0;
             //Act
             foreach (var promotion in promotions)
             {
-                var analizeOrderItemsDTO = calculationBusinessLogic.BundleBusinessRules(orderItems, promotion);
-                var (priceAferDiscount, priceBeforeDiscont) = calculationDiscountService.BundleCalculateDiscount(analizeOrderItemsDTO, promotion);
+                var analizeOrderItemsDTO = calculationBusinessLogic.ApplyBusinessRules(orderItems, promotion);
+                var bundleItem = bundleDiscount.CalculateDiscount(analizeOrderItemsDTO, promotion);
 
-                totalBeforeDiscountAmount += priceBeforeDiscont;
-                totalAferDiscountAmount += priceAferDiscount;
+                totalAmount += bundleItem.Amount;
             }
 
             //Assert
-            Assert.Equal(480 + 450, totalBeforeDiscountAmount);
-            Assert.Equal(360 + 400, totalAferDiscountAmount);
+            Assert.Equal(360 + 400, totalAmount);
         }
 
 
@@ -111,25 +111,22 @@ namespace PromotionEngineTests.CalculationDiscoutServiceTest
                 new Promotion { BundleType = BundleType.Multiple, SKU = "Adidas", Quantity = 2 , DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 180}
             };
 
-            var calculationBusinessLogic = new CalculationBusinessLogic();
-            var calculationDiscountService = new CalculationDiscountService();
+            var calculationBusinessLogic = new MultipleBusinessRules();
+            var bundleDiscount = new MultipleDiscount();
 
-            double totalAferDiscountAmount = 0.0;
-            double totalBeforeDiscountAmount = 0.0;
+            double totalAmount = 0.0;
 
             //Act
             foreach (var promotion in promotions)
             {
-                var analizeOrderItemsDTO = calculationBusinessLogic.MultipleBusinessRules(orderItems, promotion);
-                var (priceAferDiscount, priceBeforeDiscont) = calculationDiscountService.MultipleCalculateDiscount(analizeOrderItemsDTO, promotion);
+                var analizeOrderItemsDTO = calculationBusinessLogic.ApplyBusinessRules(orderItems, promotion);
+                var bundleItem = bundleDiscount.CalculateDiscount(analizeOrderItemsDTO, promotion);
 
-                totalBeforeDiscountAmount += priceBeforeDiscont;
-                totalAferDiscountAmount += priceAferDiscount;
+                totalAmount += bundleItem.Amount;
             }
 
             //Assert
-            Assert.Equal(300 + 200, totalBeforeDiscountAmount);
-            Assert.Equal(250 + 180, totalAferDiscountAmount);
+            Assert.Equal(250 + 180, totalAmount);
         }
 
         [Fact]
@@ -153,25 +150,22 @@ namespace PromotionEngineTests.CalculationDiscoutServiceTest
                 new Promotion { BundleType = BundleType.Multiple, SKU = "Adidas", Quantity = 2 , DiscountType = DiscountType.Percentage, PercentageDiscount= 10}
             };
 
-            var calculationBusinessLogic = new CalculationBusinessLogic();
-            var calculationDiscountService = new CalculationDiscountService();
+            var calculationBusinessLogic = new MultipleBusinessRules();
+            var bundleDiscount = new MultipleDiscount();
 
-            double totalAferDiscountAmount = 0.0;
-            double totalBeforeDiscountAmount = 0.0;
+            double totalAmount = 0.0;
 
             //Act
             foreach (var promotion in promotions)
             {
-                var analizeOrderItemsDTO = calculationBusinessLogic.MultipleBusinessRules(orderItems, promotion);
-                var (priceAferDiscount, priceBeforeDiscont) = calculationDiscountService.MultipleCalculateDiscount(analizeOrderItemsDTO, promotion);
+                var analizeOrderItemsDTO = calculationBusinessLogic.ApplyBusinessRules(orderItems, promotion);
+                var bundleItem = bundleDiscount.CalculateDiscount(analizeOrderItemsDTO, promotion);
 
-                totalBeforeDiscountAmount += priceBeforeDiscont;
-                totalAferDiscountAmount += priceAferDiscount;
+                totalAmount += bundleItem.Amount;
             }
 
             //Assert
-            Assert.Equal(300 + 400, totalBeforeDiscountAmount);
-            Assert.Equal(270 + 360, totalAferDiscountAmount);
+            Assert.Equal(270 + 360, totalAmount);
         }
     }
 }

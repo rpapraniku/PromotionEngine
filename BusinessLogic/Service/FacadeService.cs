@@ -28,11 +28,9 @@ namespace BusinessLogic.Service
             Console.WriteLine(Environment.NewLine);
 
             var totalSum = checkoutSummary.SingleItems.Sum(x => x.TotalPrice) +
-                checkoutSummary.MultipleBundleItems.Sum(x => x.Amount) +
-                checkoutSummary.CombinationBundleItems.Sum(x => x.Amount);
+                checkoutSummary.BundleItems.Sum(x => x.Amount);
 
-            var totaldiscount = checkoutSummary.MultipleBundleItems.Sum(x => x.PromotionDiscount) +
-                checkoutSummary.CombinationBundleItems.Sum(x => x.PromotionDiscount);
+            var totaldiscount = checkoutSummary.BundleItems.Sum(x => x.PromotionDiscount);
 
             Console.WriteLine($"Promotion discount:{ totaldiscount }");
             Console.WriteLine($"Total Amount:{ totalSum }");

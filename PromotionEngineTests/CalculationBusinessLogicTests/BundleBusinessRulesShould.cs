@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.DTO;
 using BusinessLogic.Service;
+using BusinessLogic.Service.BusinessRules;
 using DataAccess.Entities;
 using DataAccess.Enums;
 using System;
@@ -25,10 +26,10 @@ namespace PromotionEngineTests.CalculationBusinessLogicTests
 
             var promotion = new Promotion { BundleType = BundleType.Bundle, SKUs = new List<string> { "C", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 };
 
-            var calculationBusinessLogic = new CalculationBusinessLogic();
+            var bundleBusinessRules = new BundleBusinessRules();
 
             //Act
-            var analizeOrderItemsDTO = calculationBusinessLogic.BundleBusinessRules(orderItems, promotion);
+            var analizeOrderItemsDTO = bundleBusinessRules.ApplyBusinessRules(orderItems, promotion);
 
             //Assert
             Assert.Empty(analizeOrderItemsDTO.ItemForProccessing);
@@ -48,10 +49,10 @@ namespace PromotionEngineTests.CalculationBusinessLogicTests
 
             var promotion = new Promotion { BundleType = BundleType.Bundle, SKUs = new List<string> { "C", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 };
 
-            var calculationBusinessLogic = new CalculationBusinessLogic();
+            var bundleBusinessRules = new BundleBusinessRules();
 
             //Act
-            var analizeOrderItemsDTO = calculationBusinessLogic.BundleBusinessRules(orderItems, promotion);
+            var analizeOrderItemsDTO = bundleBusinessRules.ApplyBusinessRules(orderItems, promotion);
 
             //Assert
             Assert.Equal(2, analizeOrderItemsDTO.ItemForProccessing.Count);
@@ -71,10 +72,10 @@ namespace PromotionEngineTests.CalculationBusinessLogicTests
 
             var promotion = new Promotion { BundleType = BundleType.Bundle, SKUs = new List<string> { "C", "D" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 };
 
-            var calculationBusinessLogic = new CalculationBusinessLogic();
+            var bundleBusinessRules = new BundleBusinessRules();
 
             //Act
-            var analizeOrderItemsDTO = calculationBusinessLogic.BundleBusinessRules(orderItems, promotion);
+            var analizeOrderItemsDTO = bundleBusinessRules.ApplyBusinessRules(orderItems, promotion);
 
             //Assert
             Assert.Equal(2, analizeOrderItemsDTO.BundleCount);
@@ -101,18 +102,16 @@ namespace PromotionEngineTests.CalculationBusinessLogicTests
                 new Promotion{ BundleType = BundleType.Bundle, SKUs = new List<string> { "C", "Adidas" }, DiscountType = DiscountType.FixedPrice, FixedPriceDiscount = 30 }
             };
 
-            var calculationBusinessLogic = new CalculationBusinessLogic();
+            var bundleBusinessRules = new BundleBusinessRules();
 
             //Act
             var analizeOrderItemsDTOList = new List<AnalizeOrderItemsDTO>();
             foreach (var promotion in promotions)
             {
-                analizeOrderItemsDTOList.Add(calculationBusinessLogic.BundleBusinessRules(orderItems, promotion));
+                analizeOrderItemsDTOList.Add(bundleBusinessRules.ApplyBusinessRules(orderItems, promotion));
                 //Assert
             }
-            Assert.Equal(5, analizeOrderItemsDTOList.SelectMany(x=> x.SingleItems).Sum(x => x.ItemCount));
+            Assert.Equal(5, analizeOrderItemsDTOList.SelectMany(x => x.SingleItems).Sum(x => x.ItemCount));
         }
-
-        
     }
 }
