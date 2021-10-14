@@ -51,7 +51,7 @@ I am using xUnit.
 
 
 ## PS
-## Question that I got from the interview was: How will you handle 0 the if we replace 100 with 0 in the code below. Apparently we cannot devide anything with 0. But as you can see in my code below its 100!!! I mean!!!
+## Question that I got from the interviewer was: How will you handle 0 the if we replace 100 with 0 in the code below. Apparently we cannot devide anything with 0. But as you can see in my code below its 100!!! I mean!!!
 ```
 else
             {
