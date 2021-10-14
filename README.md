@@ -4,58 +4,48 @@
 
 ## **Promotion Engine - Console Application**
 
-### Brief description
+JOB INTERVIEW - CODE CHALLANGE 
 
-#### 1. BusinessLogic 
-                        
-In business layer are DTOs and calculation classes like (**BundleCalculator**, **MultipleCalculator**, **DefaultCalculator**)
+The promotion rules are mutually exclusive, that implies only one promotion (individual SKU or combined) is applicable to a particular SKU. Rest depends on the imagination of the programmer for which scenarios they want to consider, for example (case 1 => 2A = 30 and A=A40%) or (case 2 => either 2A = 30 or A=A40%)
 
-- **BundleCalculator** - for promotions like: C + D
-- **MultipleCalculator** - for promotions like: 4A ..etc
-- **DefaultCalculator** - for non promotion items: Normal calculation 
+Problem Statement 1: Promotion Engine
 
-It terms of promotion below I have pasted the whole Promotion class that I thought it will fullfill the requrement for entering 2 types of promotions. 
-The promotion type is determined by **`BundleType.Multiple || BundleType.Combination`**.
-Also we have 2 types of each BundleType: **`DiscountType = DiscountType.FixedPrice` || `DiscountType = DiscountType.Percentage`**, in which we decide if we want to use % percentage || fixedPrices.
+We need you to implement a simple promotion engine for a checkout process. Our Cart contains a list of single character SKU ids (A, B, C. ..) over which the promotion engine will need to run.
 
-*For promotion type **`BundleType.Multiple`** we need to provide: **`Quantity`** which is the promotion quantity.* <br>
-*For discount type **`DiscountType.FixedPrice`** we need to provide: **`FixedPriceDiscount`** which is the promotion fix price.*<br>
-*For discount type **`DiscountType.Percentage`** we need to provide: **`PercentageDiscount`** which is the promotion percentage discount.*<br>
+The promotion engine will need to calculate the total order value after applying the 2 promotion types
 
-```
-new Promotion {
-  Id = 1,
-  Title = "3 of A's for 130",
-  BundleType = BundleType.Multiple,
-  SKU = "A",
-  Quantity = 3,
-  DiscountType = DiscountType.FixedPrice,
-  FixedPriceDiscount = 130
-  }
-```
+• buy 'n' items of a SKU for a fixed price (3 A's for 130)
+• buy SKU 1 & SKU 2 for a fixed price ( C + D = 30 )
 
-#### 2. DataAccess
+The promotion engine should be modular to allow for more promotion types to be added at a later date (e.g. a future promotion could be x% of a SKU unit price). For this coding exercise you can assume that the promotions will be mutually exclusive; in other words if one is applied the other promotions will not apply
 
-I am using in memory database because its a demo app and it was more flexable for changing.
-I am populating the database using Seeds. 
+Test Setup
+Unit price for SKU IDs A 50
+B 30
+C 20
+D 15
 
-#### 3. PromotionEngine
+Active Promotions
+3 of A's for 130
+2 of B's for 45 C & D for 30
 
-This is the Console application. 
-It has Dependecy Injection.
-It has the Database.Run static method that lunches the seeds. 
+Scenario A
+1 * A = 50
+1 * B = 30
+1 * C = 20
+Total 100
 
-#### 4. PromotionEngineTests
+Scenario B
+5 * A = 130 + 2*50
+5 * B = 45 + 45 + 30
+1 * C = 28
+Total 370
 
-I am using xUnit.
+Scenario C
+3 * A = 130
+5 * B = 45 + 45 + 1 * 30
+1 * C = -
+1 * D = 30
+Total 280
 
-
-## PS
-## Question that I got from the interviewer was: How will you handle 0 the if we replace 100 with 0 in the code below. Apparently we cannot devide anything with 0. But as you can see in my code below its 100!!! I mean!!!
-```
-else
-            {
-                priceBeforeDiscount = rulesDTO.ItemForProccessing.Sum(item => item.Price * item.Quantity);
-                priceAfterDiscount = priceBeforeDiscount - priceBeforeDiscount * promotion.PercentageDiscount / 100;
-            }
-```
+<hr>
